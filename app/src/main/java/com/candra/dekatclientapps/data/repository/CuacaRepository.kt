@@ -5,6 +5,7 @@ import androidx.lifecycle.liveData
 import com.candra.dekatclientapps.data.common.Result
 import com.candra.dekatclientapps.data.network.ApiService
 import com.candra.dekatclientapps.data.response.CuacaResponse
+import com.candra.dekatclientapps.data.response.PostDataResponse
 
 class CuacaRepository constructor(
     private val apiService: ApiService,
@@ -29,7 +30,7 @@ class CuacaRepository constructor(
         }
     }
 
-    fun postDataCuaca(kecamatan: String, dampak: String, kondisi: String) : LiveData<Result<CuacaResponse>> = liveData{
+    fun postDataCuaca(kecamatan: String, dampak: String, kondisi: String) : LiveData<Result<PostDataResponse>> = liveData{
         emit(Result.Loading)
         try {
             val data = apiService.postDataCuaca(kecamatan, dampak, kondisi)

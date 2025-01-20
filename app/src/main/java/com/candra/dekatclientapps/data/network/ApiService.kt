@@ -1,6 +1,7 @@
 package com.candra.dekatclientapps.data.network
 
 import com.candra.dekatclientapps.data.response.CuacaResponse
+import com.candra.dekatclientapps.data.response.PostDataResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -21,5 +22,5 @@ interface ApiService {
         @Field("kecamatan") kecamatan: String,
         @Field("dampak") dampak: String,
         @Field("kondisi") kondisi: String,
-    ): CuacaResponse
+    ): PostDataResponse
 }
