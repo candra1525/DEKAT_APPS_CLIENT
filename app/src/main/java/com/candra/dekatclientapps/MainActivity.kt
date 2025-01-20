@@ -124,18 +124,13 @@ fun AppsName(
                         textAlign = TextAlign.Start, fontSize = 18.sp
                     )
                 )
+                Spacer(modifier = Modifier.padding(4.dp))
+                Text(
+                    text = "Dibuat oleh Candra - Universitas MDP", style = MaterialTheme.typography.bodyMedium.copy(
+                        textAlign = TextAlign.Start, fontSize = 12.sp, fontWeight = FontWeight.Bold
+                    )
+                )
             }
-
-            // Tombol refresh
-//            IconButton(onClick = {
-//                Toast.makeText(context, "Memuat data terbaru...", Toast.LENGTH_SHORT).show()
-//            }) {
-//                Icon(
-//                    imageVector = Icons.Default.Refresh,
-//                    contentDescription = "Refresh",
-//                    tint = MaterialTheme.colorScheme.primary
-//                )
-//            }
         }
 
         FormData(viewModel = viewModel)
@@ -233,7 +228,7 @@ fun FormData(viewModel: CuacaViewModel) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding = PaddingValues(8.dp),
-                    modifier = Modifier.height(350.dp)
+                    modifier = Modifier.height(370.dp)
                 ) {
                     items(listKondisi, key = { it.name }) { item ->
                         Card(
@@ -377,30 +372,62 @@ fun FormData(viewModel: CuacaViewModel) {
                     val dampak = selectedItem?.name ?: "Tidak ada dampak"
                     val kecamatan = selectedOption ?: "Tidak ada desa/kelurahan"
 
-                    viewModel.postDataCuaca(kecamatan, dampak, kondisi).observe(context as LifecycleOwner) { result ->
-                        if (result != null) {
-                            when (result) {
-                                is Result.Loading -> {
-                                    Toast.makeText(context, "Sedang mengirim data...", Toast.LENGTH_LONG).show()
-                                }
+                    if (kondisi != "Tidak ada kondisi" && dampak != "Tidak ada dampak" && kecamatan != "Tidak ada desa/kelurahan") {
+                        viewModel.postDataCuaca(kecamatan, dampak, kondisi)
+                            .observe(context as LifecycleOwner) { result ->
+                                if (result != null) {
+                                    when (result) {
+                                        is Result.Loading -> {
+                                            Toast.makeText(
+                                                context,
+                                                "Sedang mengirim data...",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
 
-                                is Result.Success -> {
-                                    Toast.makeText(context, "Data berhasil dikirim", Toast.LENGTH_LONG).show()
-                                    // bersihkan data
-                                    selectedItem = null
-                                    selectedItemKondisi = null
-                                    selectedOption = null
-                                }
+                                        is Result.Success -> {
+                                            Toast.makeText(
+                                                context,
+                                                "Data berhasil dikirim",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                            // bersihkan data
+                                            selectedItem = null
+                                            selectedItemKondisi = null
+                                            selectedOption = null
+                                        }
 
-                                is Result.Error -> {
-                                    Toast.makeText(context, "Data gagal dikirim", Toast.LENGTH_LONG).show()
+                                        is Result.Error -> {
+                                            Toast.makeText(
+                                                context,
+                                                "Data gagal dikirim",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                    }
                                 }
                             }
+                    } else {
+                        if (kecamatan == "Tidak ada desa/kelurahan") {
+                            Toast.makeText(
+                                context,
+                                "Pilih kabupaten/kota dan desa/kelurahan terlebih dahulu",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else if (kondisi == "Tidak ada kondisi") {
+                            Toast.makeText(
+                                context,
+                                "Pilih kondisi terlebih dahulu",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else if (dampak == "Tidak ada dampak") {
+                            Toast.makeText(
+                                context,
+                                "Pilih dampak terlebih dahulu",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
-
-
-
                 }) {
                     Text(text = "Kirim Data", modifier = Modifier.padding(8.dp))
                 }
